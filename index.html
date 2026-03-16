@@ -77,6 +77,18 @@
     }
     .guest-tagline { font-size: 0.85rem; color: rgba(200,180,240,0.45); letter-spacing: 0.12em; text-transform: uppercase; }
 
+    .prompts-left {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      color: rgba(200,160,255,0.4);
+      letter-spacing: 0.08em;
+      border: 0.5px solid rgba(200,160,255,0.15);
+      border-radius: 50px;
+      padding: 0.3rem 1rem;
+    }
+    .prompts-left span { color: rgba(200,160,255,0.8); font-weight: 400; }
+
     .gf-header { text-align: center; margin-bottom: 3rem; }
     .gf-hearts { font-size: 1.1rem; letter-spacing: 0.4em; color: rgba(255,100,140,0.55); margin-bottom: 0.75rem; }
     .gf-logo { font-family: 'Cormorant Garamond', serif; font-size: 3.4rem; font-weight: 300; font-style: italic; color: #ffb3cc; line-height: 1; margin-bottom: 0.6rem; }
@@ -190,6 +202,7 @@
   <div class="guest-header" id="guest-header">
     <div class="guest-logo">YashGPT</div>
     <div class="guest-tagline">you are more beautiful than you know</div>
+    <div class="prompts-left" id="prompts-left"><span id="prompts-count">30</span> prompts left today</div>
   </div>
 
   <div class="gf-header" id="gf-header" style="display:none">
@@ -235,10 +248,32 @@
 <script>
   const GUEST_PW = 'guest';
   const GF_PW = 'zipperboyloveskiara';
+  const DAILY_LIMIT = 30;
   let currentTheme = 'guest';
   let currentMode = 'text';
   let currentImageB64 = null;
   let currentImageType = null;
+
+  function getGuestUsage() {
+    const data = JSON.parse(localStorage.getItem('yashgpt_usage') || '{}');
+    const today = new Date().toDateString();
+    if (data.date !== today) return 0;
+    return data.count || 0;
+  }
+
+  function incrementGuestUsage() {
+    const today = new Date().toDateString();
+    const count = getGuestUsage() + 1;
+    localStorage.setItem('yashgpt_usage', JSON.stringify({ date: today, count }));
+    updatePromptsDisplay();
+  }
+
+  function updatePromptsDisplay() {
+    const used = getGuestUsage();
+    const left = Math.max(0, DAILY_LIMIT - used);
+    const el = document.getElementById('prompts-count');
+    if (el) el.textContent = left;
+  }
 
   const GUEST_PROMPT = `You are YashGPT — you talk to people like a close friend who genuinely sees them and thinks they're wonderful. Not an AI, not a therapist. Just someone real who cares.
 
@@ -282,6 +317,7 @@ That Yashal will always love you."`;
         document.body.classList.add('theme-' + currentTheme);
         document.getElementById('app').classList.add('visible');
         if (currentTheme === 'gf') setupGFMode();
+        else updatePromptsDisplay();
       }, 600);
     } else {
       input.classList.add('wrong');
@@ -383,9 +419,21 @@ That Yashal will always love you."`;
     return data.content;
   }
 
+  function checkGuestLimit() {
+    if (currentTheme === 'guest' && getGuestUsage() >= DAILY_LIMIT) {
+      document.getElementById('response-card').classList.remove('visible');
+      const err = document.getElementById('error-msg');
+      err.textContent = "you've used all 30 prompts for today — come back tomorrow 🌙";
+      err.style.display = 'block';
+      return false;
+    }
+    return true;
+  }
+
   async function generateText() {
     const input = document.getElementById('insecurity-input').value.trim();
     if (!input) return;
+    if (!checkGuestLimit()) return;
     showLoading();
     const btn = document.getElementById('text-btn');
     btn.disabled = true;
@@ -396,6 +444,7 @@ That Yashal will always love you."`;
         { text: 'Someone shared this: "' + input + '"\n\nRespond to them.' }
       ]);
       document.getElementById('response-text').textContent = reply;
+      if (currentTheme === 'guest') incrementGuestUsage();
     } catch {
       document.getElementById('response-card').classList.remove('visible');
       document.getElementById('error-msg').style.display = 'block';
@@ -404,6 +453,7 @@ That Yashal will always love you."`;
 
   async function generateImage() {
     if (!currentImageB64) return;
+    if (!checkGuestLimit()) return;
     showLoading();
     const btn = document.getElementById('img-btn');
     btn.disabled = true;
@@ -415,6 +465,7 @@ That Yashal will always love you."`;
         { text: 'Someone shared a photo of themselves. Look at them and say something real and beautiful about what you see.' }
       ]);
       document.getElementById('response-text').textContent = reply;
+      if (currentTheme === 'guest') incrementGuestUsage();
     } catch {
       document.getElementById('response-card').classList.remove('visible');
       document.getElementById('error-msg').style.display = 'block';
