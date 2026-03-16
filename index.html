@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YashGPT — you are more beautiful than you know</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent: #c9a8ff;
+      --accent2: #7eb8ff;
+      --accent3: #ffafd0;
+      --bg: #0d0a12;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(200,160,255,0.18);
+      --text: #f0eaf8;
+      --muted: rgba(200,180,240,0.45);
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 30%, rgba(120,60,200,0.13) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(60,100,200,0.09) 0%, transparent 55%),
+        radial-gradient(ellipse at 55% 10%, rgba(255,120,180,0.06) 0%, transparent 45%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── LOCK SCREEN ── */
+    #lock-screen {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      background: var(--bg);
+      padding: 2rem;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    #lock-screen.unlocking {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    .lock-icon { width: 52px; height: 52px; margin-bottom: 2rem; opacity: 0.35; }
+
+    .lock-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem;
+      font-style: italic;
+      background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .lock-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+
+    .lock-input-wrap { position: relative; width: 100%; max-width: 340px; margin-bottom: 1rem; }
+
+    .lock-input-wrap input {
+      width: 100%;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 50px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 300;
+      padding: 0.9rem 1.5rem;
+      outline: none;
+      letter-spacing: 0.08em;
+      transition: border-color 0.3s;
+      text-align: center;
+    }
+
+    .lock-input-wrap input::placeholder { color: rgba(200,180,240,0.2); letter-spacing: 0.05em; }
+    .lock-input-wrap input:focus { border-color: rgba(200,160,255,0.45); }
+
+    .lock-input-wrap input.wrong {
+      border-color: rgba(255,120,120,0.5);
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+
+    .lock-hint { font-size: 0.78rem; color: rgba(255,140,140,0.6); text-align: center; height: 1.2em; }
+
+    .lock-btn {
+      margin-top: 1.25rem;
+      width: 100%; max-width: 340px;
+      padding: 0.85rem;
+      border: none; border-radius: 50px;
+      background: linear-gradient(135deg, #7b3fe4, #4a7de8);
+      color: white;
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; font-style: italic;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.03em;
+    }
+
+    .lock-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(120,60,220,0.35); }
+
+    /* ── MAIN APP ── */
+    #app {
+      position: relative; z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+      display: none;
+    }
+
+    #app.visible { display: block; }
+
+    .header { text-align: center; margin-bottom: 3rem; }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.2rem; font-weight: 400;
+      background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em; line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .tagline { font-size: 0.85rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+
+    .mode-toggle {
+      display: flex;
+      background: rgba(255,255,255,0.03);
+      border: 0.5px solid var(--border);
+      border-radius: 50px;
+      padding: 4px;
+      margin-bottom: 2rem;
+      gap: 4px;
+    }
+
+    .mode-btn {
+      flex: 1; padding: 0.65rem 0.75rem;
+      border: none; border-radius: 50px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem; font-weight: 400;
+      transition: all 0.3s;
+      letter-spacing: 0.02em;
+    }
+
+    .mode-btn.active {
+      background: linear-gradient(135deg, rgba(150,80,255,0.28), rgba(80,140,255,0.28));
+      color: #e8d8ff;
+      border: 0.5px solid rgba(200,160,255,0.3);
+    }
+
+    .panel { display: none; animation: fadeUp 0.4s ease; }
+    .panel.active { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .field-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+
+    textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 0.5px solid var(--border);
+      border-radius: 18px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 300;
+      padding: 1.2rem 1.4rem;
+      resize: none; outline: none;
+      line-height: 1.75;
+      transition: border-color 0.3s;
+      margin-bottom: 1.5rem;
+    }
+
+    textarea::placeholder { color: rgba(200,180,240,0.2); }
+    textarea:focus { border-color: rgba(200,160,255,0.45); }
+
+    .upload-zone {
+      border: 1.5px dashed rgba(200,160,255,0.22);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      background: var(--surface);
+      margin-bottom: 1.5rem;
+    }
+
+    .upload-zone:hover, .upload-zone.drag-over { border-color: rgba(200,160,255,0.5); background: rgba(150,80,255,0.05); }
+
+    .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+
+    .upload-icon { width: 44px; height: 44px; margin: 0 auto 1rem; opacity: 0.35; }
+    .upload-text { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+    .upload-text strong { color: rgba(200,160,255,0.75); font-weight: 400; }
+
+    .preview-img {
+      width: 100%; max-height: 300px;
+      object-fit: cover;
+      border-radius: 18px;
+      margin-bottom: 1.5rem;
+      display: none;
+      border: 0.5px solid var(--border);
+    }
+
+    .conjure-btn {
+      width: 100%; padding: 1rem;
+      border: none; border-radius: 50px;
+      background: linear-gradient(135deg, #7b3fe4, #4a7de8);
+      color: white;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem; font-style: italic;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.03em;
+    }
+
+    .conjure-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(120,60,220,0.35); }
+    .conjure-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .response-card { margin-top: 2rem; display: none; animation: fadeUp 0.6s ease; }
+    .response-card.visible { display: block; }
+
+    .response-inner {
+      background: linear-gradient(145deg, rgba(100,50,200,0.1), rgba(50,80,200,0.07));
+      border: 0.5px solid var(--border);
+      border-radius: 22px;
+      padding: 2.2rem 2rem 1.75rem;
+      position: relative;
+    }
+
+    .response-inner::before {
+      content: '\201C';
+      position: absolute;
+      top: 0.4rem; left: 1.25rem;
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem;
+      color: rgba(200,160,255,0.1);
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .response-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.08rem; line-height: 1.95;
+      color: #ede0ff; font-weight: 400;
+      white-space: pre-wrap; min-height: 60px;
+    }
+
+    .loading-dots { display: inline-flex; gap: 5px; align-items: center; }
+    .loading-dots span {
+      width: 6px; height: 6px;
+      background: rgba(200,160,255,0.55);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    .again-btn {
+      display: block; margin: 1.25rem auto 0;
+      padding: 0.5rem 1.75rem;
+      background: transparent;
+      border: 0.5px solid rgba(200,160,255,0.22);
+      border-radius: 50px;
+      color: rgba(200,160,255,0.5);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.09em; text-transform: uppercase;
+      transition: all 0.3s;
+    }
+
+    .again-btn:hover { border-color: rgba(200,160,255,0.5); color: rgba(200,160,255,0.9); }
+
+    .error-msg { color: rgba(255,150,150,0.75); font-size: 0.83rem; text-align: center; margin-top: 0.75rem; display: none; }
+
+    @media (max-width: 480px) {
+      .logo { font-size: 2.4rem; }
+      .mode-btn { font-size: 0.75rem; padding: 0.6rem 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOCK SCREEN -->
+<div id="lock-screen">
+  <svg class="lock-icon" viewBox="0 0 56 56" fill="none">
+    <rect x="10" y="24" width="36" height="26" rx="6" stroke="rgba(200,160,255,0.7)" stroke-width="1.5"/>
+    <path d="M18 24v-8a10 10 0 0 1 20 0v8" stroke="rgba(200,160,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="28" cy="37" r="3" fill="rgba(200,160,255,0.7)"/>
+    <line x1="28" y1="40" x2="28" y2="44" stroke="rgba(200,160,255,0.7)" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  <div class="lock-title">YashGPT</div>
+  <div class="lock-sub">enter the password to continue</div>
+  <div class="lock-input-wrap">
+    <input type="password" id="pw-input" placeholder="password" autocomplete="off" onkeydown="if(event.key==='Enter')tryUnlock()" />
+  </div>
+  <div class="lock-hint" id="lock-hint">&nbsp;</div>
+  <button class="lock-btn" onclick="tryUnlock()">enter</button>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="header">
+    <div class="logo">YashGPT</div>
+    <div class="tagline">you are more beautiful than you know</div>
+  </div>
+
+  <div class="mode-toggle">
+    <button class="mode-btn active" onclick="switchMode('text')">share what's on your mind</button>
+    <button class="mode-btn" onclick="switchMode('image')">share a photo of yourself</button>
+  </div>
+
+  <div id="panel-text" class="panel active">
+    <div class="field-label">what's been weighing on you?</div>
+    <textarea id="insecurity-input" rows="5" placeholder="I hate how I look in photos... I feel like I'm not smart enough... I'm scared no one really loves me..."></textarea>
+    <button class="conjure-btn" onclick="generateText()">conjure something beautiful for me</button>
+  </div>
+
+  <div id="panel-image" class="panel">
+    <img id="preview-img" class="preview-img" alt="Your photo" />
+    <div class="upload-zone" id="upload-zone">
+      <input type="file" accept="image/*" id="file-input" onchange="handleFile(this)" />
+      <svg class="upload-icon" viewBox="0 0 48 48" fill="none">
+        <circle cx="24" cy="24" r="22" stroke="rgba(200,160,255,0.35)" stroke-width="1.2"/>
+        <path d="M24 32V16M24 16l-7 7M24 16l7 7" stroke="rgba(200,160,255,0.65)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="upload-text"><strong>drop a photo here</strong><br>or tap to choose one</div>
+    </div>
+    <button class="conjure-btn" id="img-btn" onclick="generateImage()" disabled>conjure something beautiful for me</button>
+  </div>
+
+  <div class="error-msg" id="error-msg">something went wrong — please try again in a moment</div>
+
+  <div class="response-card" id="response-card">
+    <div class="response-inner">
+      <div class="response-text" id="response-text"></div>
+    </div>
+    <button class="again-btn" onclick="resetResponse()">ask again</button>
+  </div>
+</div>
+
+<script>
+  const PASSWORD = 'zipperboyloveskiara';
+
+  function tryUnlock() {
+    const input = document.getElementById('pw-input');
+    const hint = document.getElementById('lock-hint');
+    if (input.value === PASSWORD) {
+      document.getElementById('lock-screen').classList.add('unlocking');
+      setTimeout(() => {
+        document.getElementById('lock-screen').style.display = 'none';
+        document.getElementById('app').classList.add('visible');
+      }, 600);
+    } else {
+      input.classList.add('wrong');
+      hint.textContent = "that's not quite right — try again";
+      setTimeout(() => { input.classList.remove('wrong'); hint.textContent = '\u00a0'; }, 1500);
+      input.value = '';
+    }
+  }
+
+  let currentMode = 'text';
+  let currentImageB64 = null;
+  let currentImageType = null;
+
+  function switchMode(mode) {
+    currentMode = mode;
+    document.querySelectorAll('.mode-btn').forEach((b, i) => {
+      b.classList.toggle('active', (i === 0 && mode === 'text') || (i === 1 && mode === 'image'));
+    });
+    document.getElementById('panel-text').classList.toggle('active', mode === 'text');
+    document.getElementById('panel-image').classList.toggle('active', mode === 'image');
+    hideResponse();
+  }
+
+  function handleFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    currentImageType = file.type;
+    const reader = new FileReader();
+    reader.onload = e => {
+      currentImageB64 = e.target.result.split(',')[1];
+      const preview = document.getElementById('preview-img');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      document.getElementById('upload-zone').style.display = 'none';
+      document.getElementById('img-btn').disabled = false;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  const zone = document.getElementById('upload-zone');
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const dt = new DataTransfer(); dt.items.add(file);
+      document.getElementById('file-input').files = dt.files;
+      handleFile(document.getElementById('file-input'));
+    }
+  });
+
+  function showLoading() {
+    document.getElementById('response-card').classList.add('visible');
+    document.getElementById('response-text').innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
+    document.getElementById('error-msg').style.display = 'none';
+  }
+
+  function hideResponse() { document.getElementById('response-card').classList.remove('visible'); }
+
+  function resetResponse() {
+    hideResponse();
+    if (currentMode === 'image') {
+      currentImageB64 = null;
+      document.getElementById('preview-img').style.display = 'none';
+      document.getElementById('upload-zone').style.display = 'block';
+      document.getElementById('img-btn').disabled = true;
+      document.getElementById('file-input').value = '';
+    }
+  }
+
+  async function callAPI(parts) {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ parts })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'error');
+    return data.content;
+  }
+
+  const SYSTEM = `You are YashGPT — a poetic, deeply empathetic AI whose entire purpose is to make people feel genuinely beautiful, seen, and loved. When someone shares an insecurity or a photo of themselves, respond with something that reads like a page from a very beautiful, literary book. Your tone is warm, intimate, and poetic — like a letter from someone who truly sees them. Rules: Write 3–5 sentences, lyrical and flowing. Never be generic or cliché — be specific and surprising. Focus on the light, not the absence of darkness. Don't say things like "you should love yourself" — show them why they already deserve to be loved. End with something that lingers — a line they'll remember. Write in second person (you/your).`;
+
+  async function generateText() {
+    const input = document.getElementById('insecurity-input').value.trim();
+    if (!input) return;
+    showLoading();
+    const btn = document.querySelector('#panel-text .conjure-btn');
+    btn.disabled = true;
+    try {
+      const reply = await callAPI([
+        { text: SYSTEM },
+        { text: `Someone shared this with me: "${input}"\n\nPlease write them something beautiful.` }
+      ]);
+      document.getElementById('response-text').textContent = reply;
+    } catch {
+      document.getElementById('response-card').classList.remove('visible');
+      document.getElementById('error-msg').style.display = 'block';
+    } finally { btn.disabled = false; }
+  }
+
+  async function generateImage() {
+    if (!currentImageB64) return;
+    showLoading();
+    const btn = document.getElementById('img-btn');
+    btn.disabled = true;
+    try {
+      const reply = await callAPI([
+        { text: SYSTEM },
+        { inlineData: { mimeType: currentImageType, data: currentImageB64 } },
+        { text: 'Someone shared a photo of themselves. Please write them something genuinely beautiful — notice something real and specific about them, and turn it into poetry.' }
+      ]);
+      document.getElementById('response-text').textContent = reply;
+    } catch {
+      document.getElementById('response-card').classList.remove('visible');
+      document.getElementById('error-msg').style.display = 'block';
+    } finally { btn.disabled = false; }
+  }
+</script>
+</body>
+</html>
