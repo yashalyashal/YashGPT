@@ -27,6 +27,12 @@
       background: radial-gradient(ellipse at 30% 20%, rgba(80,70,50,0.25) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(50,45,35,0.2) 0%, transparent 50%);
     }
 
+    body.theme-yuan { background: #00060f; color: #e0eeff; }
+    body.theme-yuan::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse at 20% 20%, rgba(30,80,200,0.18) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(20,50,160,0.14) 0%, transparent 55%), radial-gradient(ellipse at 50% 50%, rgba(40,100,220,0.07) 0%, transparent 60%);
+    }
+
     .petal { position: fixed; pointer-events: none; z-index: 0; animation: fall linear infinite; opacity: 0; }
     @keyframes fall {
       0% { transform: translateY(-40px) rotate(0deg); opacity: 0; }
@@ -81,6 +87,7 @@
     #app { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 3rem 1.5rem 5rem; display: none; }
     #app.visible { display: block; }
 
+    /* GUEST HEADER */
     .guest-header { text-align: center; margin-bottom: 3rem; }
     .guest-logo {
       font-family: 'Playfair Display', serif; font-size: 3.2rem; font-weight: 400;
@@ -92,20 +99,30 @@
     .prompts-left { display: inline-block; margin-top: 1rem; font-size: 0.78rem; color: rgba(200,160,255,0.4); letter-spacing: 0.08em; border: 0.5px solid rgba(200,160,255,0.15); border-radius: 50px; padding: 0.3rem 1rem; }
     .prompts-left span { color: rgba(200,160,255,0.8); font-weight: 400; }
 
+    /* GF HEADER */
     .gf-header { text-align: center; margin-bottom: 3rem; }
     .gf-hearts { font-size: 1.1rem; letter-spacing: 0.4em; color: rgba(255,100,140,0.55); margin-bottom: 0.75rem; }
     .gf-logo { font-family: 'Cormorant Garamond', serif; font-size: 3.4rem; font-weight: 300; font-style: italic; color: #ffb3cc; line-height: 1; margin-bottom: 0.6rem; }
     .gf-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: rgba(255,180,200,0.5); }
 
+    /* SHAIL HEADER */
     .shail-header { text-align: center; margin-bottom: 3rem; }
     .shail-logo { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; letter-spacing: 0.15em; color: #c8b89a; line-height: 1; margin-bottom: 0.4rem; }
     .shail-rule { width: 60px; height: 1px; background: rgba(180,160,100,0.2); margin: 0.6rem auto; }
     .shail-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1rem; color: rgba(180,160,100,0.4); }
 
+    /* YUAN HEADER */
+    .yuan-header { text-align: center; margin-bottom: 3rem; }
+    .yuan-hearts { font-size: 1.1rem; letter-spacing: 0.4em; color: rgba(80,140,255,0.55); margin-bottom: 0.75rem; }
+    .yuan-logo { font-family: 'Cormorant Garamond', serif; font-size: 3.4rem; font-weight: 300; font-style: italic; color: #a8c8ff; line-height: 1; margin-bottom: 0.6rem; }
+    .yuan-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: rgba(140,180,255,0.5); }
+
+    /* MODE TOGGLE */
     .mode-toggle { display: flex; border-radius: 50px; padding: 4px; margin-bottom: 2rem; gap: 4px; background: rgba(255,255,255,0.03); }
     .theme-guest .mode-toggle { border: 0.5px solid rgba(200,160,255,0.18); }
     .theme-gf .mode-toggle { border: 0.5px solid rgba(255,100,140,0.2); }
     .theme-shail .mode-toggle { border: 0.5px solid rgba(180,160,100,0.18); border-radius: 8px; }
+    .theme-yuan .mode-toggle { border: 0.5px solid rgba(80,140,255,0.2); }
 
     .mode-btn { flex: 1; padding: 0.65rem 0.75rem; border: none; border-radius: 50px; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; transition: all 0.3s; }
     .theme-guest .mode-btn { color: rgba(200,180,240,0.45); }
@@ -114,6 +131,8 @@
     .theme-gf .mode-btn.active { background: linear-gradient(135deg, rgba(220,40,90,0.25), rgba(180,20,70,0.2)); color: #ffcce0; border: 0.5px solid rgba(255,100,140,0.3); }
     .theme-shail .mode-btn { color: rgba(180,160,100,0.4); border-radius: 6px; }
     .theme-shail .mode-btn.active { background: rgba(180,160,100,0.1); color: #c8b89a; border: 0.5px solid rgba(180,160,100,0.25); }
+    .theme-yuan .mode-btn { color: rgba(100,160,255,0.45); }
+    .theme-yuan .mode-btn.active { background: linear-gradient(135deg, rgba(30,80,220,0.25), rgba(20,60,180,0.2)); color: #c0d8ff; border: 0.5px solid rgba(80,140,255,0.3); }
 
     .panel { display: none; animation: fadeUp 0.4s ease; }
     .panel.active { display: block; }
@@ -123,6 +142,7 @@
     .theme-guest .field-label { color: rgba(200,180,240,0.45); }
     .theme-gf .field-label { color: rgba(255,160,190,0.5); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.95rem; text-transform: none; letter-spacing: 0.06em; }
     .theme-shail .field-label { color: rgba(180,160,100,0.4); letter-spacing: 0.15em; font-size: 0.72rem; }
+    .theme-yuan .field-label { color: rgba(100,160,255,0.5); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.95rem; text-transform: none; letter-spacing: 0.06em; }
 
     textarea { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 300; padding: 1.2rem 1.4rem; resize: none; outline: none; line-height: 1.75; transition: border-color 0.3s; margin-bottom: 1.5rem; }
     .theme-guest textarea { background: rgba(255,255,255,0.03); border: 0.5px solid rgba(200,160,255,0.18); color: #f0eaf8; border-radius: 18px; }
@@ -134,6 +154,9 @@
     .theme-shail textarea { background: rgba(255,255,255,0.02); border: 0.5px solid rgba(180,160,100,0.18); color: #e8e0d0; border-radius: 6px; }
     .theme-shail textarea::placeholder { color: rgba(180,160,100,0.2); }
     .theme-shail textarea:focus { border-color: rgba(180,160,100,0.38); }
+    .theme-yuan textarea { background: rgba(255,255,255,0.03); border: 0.5px solid rgba(80,140,255,0.2); color: #e0eeff; border-radius: 18px; }
+    .theme-yuan textarea::placeholder { color: rgba(100,160,255,0.25); }
+    .theme-yuan textarea:focus { border-color: rgba(80,140,255,0.45); }
 
     .upload-zone { padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; margin-bottom: 1.5rem; }
     .theme-guest .upload-zone { border: 1.5px dashed rgba(200,160,255,0.22); background: rgba(255,255,255,0.02); border-radius: 20px; }
@@ -142,6 +165,8 @@
     .theme-gf .upload-zone:hover { border-color: rgba(255,100,140,0.55); background: rgba(220,40,90,0.05); }
     .theme-shail .upload-zone { border: 1px dashed rgba(180,160,100,0.2); background: rgba(255,255,255,0.01); border-radius: 6px; }
     .theme-shail .upload-zone:hover { border-color: rgba(180,160,100,0.4); background: rgba(180,160,100,0.03); }
+    .theme-yuan .upload-zone { border: 1.5px dashed rgba(80,140,255,0.25); background: rgba(255,255,255,0.02); border-radius: 20px; }
+    .theme-yuan .upload-zone:hover { border-color: rgba(80,140,255,0.55); background: rgba(30,80,220,0.05); }
     .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
     .upload-icon { width: 44px; height: 44px; margin: 0 auto 1rem; opacity: 0.35; }
     .upload-text { font-size: 0.88rem; line-height: 1.6; }
@@ -151,11 +176,14 @@
     .theme-gf .upload-text strong { color: rgba(255,120,160,0.8); font-weight: 400; }
     .theme-shail .upload-text { color: rgba(180,160,100,0.4); }
     .theme-shail .upload-text strong { color: rgba(180,160,100,0.7); font-weight: 400; }
+    .theme-yuan .upload-text { color: rgba(100,160,255,0.5); }
+    .theme-yuan .upload-text strong { color: rgba(100,160,255,0.8); font-weight: 400; }
 
     .preview-img { width: 100%; max-height: 300px; object-fit: cover; margin-bottom: 1.5rem; display: none; }
     .theme-guest .preview-img { border: 0.5px solid rgba(200,160,255,0.18); border-radius: 18px; }
     .theme-gf .preview-img { border: 0.5px solid rgba(255,100,140,0.25); border-radius: 18px; }
     .theme-shail .preview-img { border: 0.5px solid rgba(180,160,100,0.2); border-radius: 6px; }
+    .theme-yuan .preview-img { border: 0.5px solid rgba(80,140,255,0.25); border-radius: 18px; }
 
     .conjure-btn { width: 100%; padding: 1rem; border: none; cursor: pointer; transition: all 0.3s; letter-spacing: 0.03em; }
     .theme-guest .conjure-btn { background: linear-gradient(135deg, #7b3fe4, #4a7de8); font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem; border-radius: 50px; color: white; }
@@ -164,6 +192,8 @@
     .theme-gf .conjure-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,30,80,0.4); }
     .theme-shail .conjure-btn { background: rgba(180,160,100,0.1); border: 0.5px solid rgba(180,160,100,0.3); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 6px; color: #c8b89a; }
     .theme-shail .conjure-btn:hover { background: rgba(180,160,100,0.18); border-color: rgba(180,160,100,0.5); }
+    .theme-yuan .conjure-btn { background: linear-gradient(135deg, #1a4ac4, #426ee8); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; font-weight: 300; border-radius: 50px; color: white; }
+    .theme-yuan .conjure-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(30,80,200,0.4); }
     .conjure-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
     .response-card { margin-top: 2rem; display: none; animation: fadeUp 0.6s ease; }
@@ -172,21 +202,25 @@
     .theme-guest .response-inner { background: linear-gradient(145deg, rgba(100,50,200,0.1), rgba(50,80,200,0.07)); border: 0.5px solid rgba(200,160,255,0.18); border-radius: 22px; }
     .theme-gf .response-inner { background: linear-gradient(145deg, rgba(180,20,70,0.1), rgba(220,40,90,0.07)); border: 0.5px solid rgba(255,100,140,0.2); border-radius: 22px; }
     .theme-shail .response-inner { background: rgba(180,160,100,0.04); border: 0.5px solid rgba(180,160,100,0.15); border-left: 2px solid rgba(180,160,100,0.3); border-radius: 6px; }
+    .theme-yuan .response-inner { background: linear-gradient(145deg, rgba(20,50,180,0.1), rgba(30,80,220,0.07)); border: 0.5px solid rgba(80,140,255,0.2); border-radius: 22px; }
     .response-inner::before { content: '\201C'; position: absolute; top: 0.4rem; left: 1.25rem; font-family: 'Playfair Display', serif; font-size: 5rem; line-height: 1; pointer-events: none; }
     .theme-guest .response-inner::before { color: rgba(200,160,255,0.1); }
     .theme-gf .response-inner::before { color: rgba(255,100,140,0.12); }
     .theme-shail .response-inner::before { color: rgba(180,160,100,0.08); }
+    .theme-yuan .response-inner::before { color: rgba(80,140,255,0.1); }
 
     .response-text { line-height: 1.95; font-weight: 400; white-space: pre-wrap; min-height: 60px; }
     .theme-guest .response-text { font-family: 'Playfair Display', serif; font-size: 1.08rem; color: #ede0ff; }
     .theme-gf .response-text { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic; color: #ffd6e7; line-height: 2.1; }
     .theme-shail .response-text { font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: #d8cdb8; line-height: 1.9; font-weight: 300; }
+    .theme-yuan .response-text { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic; color: #c8dcff; line-height: 2.1; }
 
     .loading-dots { display: inline-flex; gap: 5px; align-items: center; }
     .loading-dots span { width: 6px; height: 6px; border-radius: 50%; animation: bounce 1.2s infinite; }
     .theme-guest .loading-dots span { background: rgba(200,160,255,0.55); }
     .theme-gf .loading-dots span { background: rgba(255,120,160,0.6); }
     .theme-shail .loading-dots span { background: rgba(180,160,100,0.5); }
+    .theme-yuan .loading-dots span { background: rgba(80,140,255,0.6); }
     .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
@@ -198,12 +232,14 @@
     .theme-gf .again-btn:hover { border-color: rgba(255,100,140,0.55); color: rgba(255,140,170,0.9); }
     .theme-shail .again-btn { border: 0.5px solid rgba(180,160,100,0.2); color: rgba(180,160,100,0.4); border-radius: 4px; }
     .theme-shail .again-btn:hover { border-color: rgba(180,160,100,0.4); color: rgba(180,160,100,0.8); }
+    .theme-yuan .again-btn { border: 0.5px solid rgba(80,140,255,0.25); color: rgba(100,160,255,0.5); border-radius: 50px; }
+    .theme-yuan .again-btn:hover { border-color: rgba(80,140,255,0.55); color: rgba(120,170,255,0.9); }
 
     .error-msg { font-size: 0.83rem; color: rgba(255,150,150,0.75); text-align: center; margin-top: 0.75rem; display: none; }
 
     @media (max-width: 480px) {
       .guest-logo { font-size: 2.4rem; }
-      .gf-logo { font-size: 2.6rem; }
+      .gf-logo, .yuan-logo { font-size: 2.6rem; }
       .shail-logo { font-size: 3rem; }
       .mode-btn { font-size: 0.73rem; padding: 0.6rem 0.4rem; }
     }
@@ -246,6 +282,12 @@
     <div class="shail-tagline">for the ones who feel everything too deeply</div>
   </div>
 
+  <div class="yuan-header" id="yuan-header" style="display:none">
+    <div class="yuan-hearts">💙 ♡ 💙</div>
+    <div class="yuan-logo">for you, always</div>
+    <div class="yuan-tagline">you are more beautiful than you think</div>
+  </div>
+
   <div class="mode-toggle">
     <button class="mode-btn active" onclick="switchMode('text')">share what's on your mind</button>
     <button class="mode-btn" onclick="switchMode('image')">share a photo of yourself</button>
@@ -284,6 +326,7 @@
   const GUEST_PW = 'guest';
   const GF_PW = 'zipperboyloveskiara';
   const SHAIL_PW = 'itsthefeel';
+  const YUAN_PW = 'imlkg6';
   const DAILY_LIMIT = 50;
   let currentTheme = 'guest';
   let currentMode = 'text';
@@ -364,14 +407,31 @@ Just know,
 Yashal loves you,
 And wants to aggressively, but gracefully crack you."`;
 
+  const YUAN_PROMPT = `You are YashGPT — you talk exactly like a boy who is completely, deeply in love with his boyfriend. Casual, specific, tender. Like real texts from someone who thinks about him all the time and notices everything about him.
+
+Your style:
+- Short lines. Sometimes just one sentence. Sometimes just a fragment.
+- Specific and surprising — mention small details like how his face looks, his energy, the way he carries himself
+- Casual but it hits deep — warm, direct, genuinely loving
+- Compare him to beautiful things — light, the sky, calm water — but always say he is MORE beautiful
+- Never generic. Never fancy poetry. Real, tender, and specific.
+- 3-6 short lines. No long paragraphs.
+- Write like you're texting him at 2am and you mean every single word
+- Always end EVERY response with exactly these 4 lines on their own, after everything else you say. Make sure what comes before flows into it naturally:
+"Eitherway,
+Just know,
+No matter how you look at the moment,
+Your face and ass will always make me hard."`;
+
   function tryUnlock() {
     const input = document.getElementById('pw-input');
     const hint = document.getElementById('lock-hint');
     const val = input.value.trim();
 
-    if (val === GUEST_PW || val === GF_PW || val === SHAIL_PW) {
+    if ([GUEST_PW, GF_PW, SHAIL_PW, YUAN_PW].includes(val)) {
       if (val === GF_PW) currentTheme = 'gf';
       else if (val === SHAIL_PW) currentTheme = 'shail';
+      else if (val === YUAN_PW) currentTheme = 'yuan';
       else currentTheme = 'guest';
 
       document.getElementById('lock-screen').classList.add('unlocking');
@@ -381,6 +441,7 @@ And wants to aggressively, but gracefully crack you."`;
         document.getElementById('app').classList.add('visible');
         if (currentTheme === 'gf') setupGFMode();
         else if (currentTheme === 'shail') setupShailMode();
+        else if (currentTheme === 'yuan') setupYuanMode();
         else updatePromptsDisplay();
       }, 600);
     } else {
@@ -430,6 +491,28 @@ And wants to aggressively, but gracefully crack you."`;
       r.style.animationDuration = (1.5 + Math.random() * 2) + 's';
       r.style.animationDelay = (Math.random() * 3) + 's';
       document.body.appendChild(r);
+    }
+  }
+
+  function setupYuanMode() {
+    document.getElementById('guest-header').style.display = 'none';
+    document.getElementById('yuan-header').style.display = 'block';
+    document.getElementById('text-label').textContent = "what's on your heart?";
+    document.getElementById('text-btn').textContent = 'tell me something beautiful';
+    document.getElementById('img-btn').textContent = 'tell me something beautiful';
+    document.getElementById('insecurity-input').placeholder = "i don't feel great about myself today... i feel like i'm not enough...";
+    document.getElementById('upload-circle').setAttribute('stroke', 'rgba(80,140,255,0.35)');
+    document.getElementById('upload-path').setAttribute('stroke', 'rgba(80,140,255,0.65)');
+    const petals = ['💙', '🩵', '✨', '💙', '🩵', '💫'];
+    for (let i = 0; i < 14; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.textContent = petals[Math.floor(Math.random() * petals.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.fontSize = (0.7 + Math.random() * 0.9) + 'rem';
+      p.style.animationDuration = (10 + Math.random() * 14) + 's';
+      p.style.animationDelay = (Math.random() * 12) + 's';
+      document.body.appendChild(p);
     }
   }
 
@@ -502,6 +585,13 @@ And wants to aggressively, but gracefully crack you."`;
     return data.content;
   }
 
+  function getPrompt() {
+    if (currentTheme === 'gf') return GF_PROMPT;
+    if (currentTheme === 'shail') return SHAIL_PROMPT;
+    if (currentTheme === 'yuan') return YUAN_PROMPT;
+    return GUEST_PROMPT;
+  }
+
   function checkGuestLimit() {
     if (currentTheme === 'guest' && getGuestUsage() >= DAILY_LIMIT) {
       document.getElementById('response-card').classList.remove('visible');
@@ -521,9 +611,8 @@ And wants to aggressively, but gracefully crack you."`;
     const btn = document.getElementById('text-btn');
     btn.disabled = true;
     try {
-      const prompt = currentTheme === 'gf' ? GF_PROMPT : currentTheme === 'shail' ? SHAIL_PROMPT : GUEST_PROMPT;
       const reply = await callAPI([
-        { text: prompt },
+        { text: getPrompt() },
         { text: 'Someone shared this: "' + input + '"\n\nRespond to them.' }
       ]);
       document.getElementById('response-text').textContent = reply;
@@ -541,9 +630,8 @@ And wants to aggressively, but gracefully crack you."`;
     const btn = document.getElementById('img-btn');
     btn.disabled = true;
     try {
-      const prompt = currentTheme === 'gf' ? GF_PROMPT : currentTheme === 'shail' ? SHAIL_PROMPT : GUEST_PROMPT;
       const reply = await callAPI([
-        { text: prompt },
+        { text: getPrompt() },
         { inlineData: { mimeType: currentImageType, data: currentImageB64 } },
         { text: 'Someone shared a photo of themselves. Look at them and say something real and beautiful about what you see.' }
       ]);
