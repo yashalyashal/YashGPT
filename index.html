@@ -3,335 +3,173 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>YashGPT — you are more beautiful than you know</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+  <title>YashGPT</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=DM+Sans:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100vh; font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
 
-    :root {
-      --accent: #c9a8ff;
-      --accent2: #7eb8ff;
-      --accent3: #ffafd0;
-      --bg: #0d0a12;
-      --surface: rgba(255,255,255,0.03);
-      --border: rgba(200,160,255,0.18);
-      --text: #f0eaf8;
-      --muted: rgba(200,180,240,0.45);
+    body.theme-guest { background: #0d0a12; color: #f0eaf8; }
+    body.theme-guest::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse at 20% 30%, rgba(120,60,200,0.13) 0%, transparent 55%), radial-gradient(ellipse at 80% 70%, rgba(60,100,200,0.09) 0%, transparent 55%);
     }
 
-    html, body {
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      overflow-x: hidden;
+    body.theme-gf { background: #130009; color: #ffe8f0; }
+    body.theme-gf::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse at 20% 20%, rgba(220,40,90,0.18) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(160,20,60,0.14) 0%, transparent 55%);
     }
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at 20% 30%, rgba(120,60,200,0.13) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 70%, rgba(60,100,200,0.09) 0%, transparent 55%),
-        radial-gradient(ellipse at 55% 10%, rgba(255,120,180,0.06) 0%, transparent 45%);
-      pointer-events: none;
-      z-index: 0;
+    .petal { position: fixed; pointer-events: none; z-index: 0; animation: fall linear infinite; opacity: 0; }
+    @keyframes fall {
+      0% { transform: translateY(-40px) rotate(0deg); opacity: 0; }
+      5% { opacity: 0.5; } 95% { opacity: 0.2; }
+      100% { transform: translateY(105vh) rotate(400deg); opacity: 0; }
     }
 
-    /* ── LOCK SCREEN ── */
     #lock-screen {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      background: var(--bg);
-      padding: 2rem;
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 100;
+      background: #0d0a12; padding: 2rem; transition: opacity 0.6s ease, transform 0.6s ease;
     }
-
-    #lock-screen.unlocking {
-      opacity: 0;
-      transform: scale(1.04);
-      pointer-events: none;
-    }
-
+    #lock-screen.unlocking { opacity: 0; transform: scale(1.04); pointer-events: none; }
     .lock-icon { width: 52px; height: 52px; margin-bottom: 2rem; opacity: 0.35; }
-
     .lock-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.4rem;
-      font-style: italic;
-      background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-align: center;
-      margin-bottom: 0.5rem;
+      font-family: 'Playfair Display', serif; font-size: 2.4rem; font-style: italic;
+      background: linear-gradient(135deg, #c9a8ff, #7eb8ff, #ffafd0);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      text-align: center; margin-bottom: 0.5rem;
     }
-
-    .lock-sub {
-      font-size: 0.8rem;
-      color: var(--muted);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 2.5rem;
-      text-align: center;
-    }
-
-    .lock-input-wrap { position: relative; width: 100%; max-width: 340px; margin-bottom: 1rem; }
-
+    .lock-sub { font-size: 0.8rem; color: rgba(200,180,240,0.45); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 2.5rem; text-align: center; }
+    .lock-input-wrap { width: 100%; max-width: 340px; margin-bottom: 1rem; }
     .lock-input-wrap input {
-      width: 100%;
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: 50px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 300;
-      padding: 0.9rem 1.5rem;
-      outline: none;
-      letter-spacing: 0.08em;
-      transition: border-color 0.3s;
-      text-align: center;
+      width: 100%; background: rgba(255,255,255,0.03); border: 0.5px solid rgba(200,160,255,0.18);
+      border-radius: 50px; color: #f0eaf8; font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; padding: 0.9rem 1.5rem; outline: none; letter-spacing: 0.08em;
+      transition: border-color 0.3s; text-align: center;
     }
-
-    .lock-input-wrap input::placeholder { color: rgba(200,180,240,0.2); letter-spacing: 0.05em; }
+    .lock-input-wrap input::placeholder { color: rgba(200,180,240,0.2); }
     .lock-input-wrap input:focus { border-color: rgba(200,160,255,0.45); }
-
-    .lock-input-wrap input.wrong {
-      border-color: rgba(255,120,120,0.5);
-      animation: shake 0.4s ease;
-    }
-
+    .lock-input-wrap input.wrong { border-color: rgba(255,120,120,0.5); animation: shake 0.4s ease; }
     @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      20% { transform: translateX(-8px); }
-      40% { transform: translateX(8px); }
-      60% { transform: translateX(-5px); }
-      80% { transform: translateX(5px); }
+      0%,100% { transform: translateX(0); } 20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); }
     }
-
     .lock-hint { font-size: 0.78rem; color: rgba(255,140,140,0.6); text-align: center; height: 1.2em; }
-
     .lock-btn {
-      margin-top: 1.25rem;
-      width: 100%; max-width: 340px;
-      padding: 0.85rem;
-      border: none; border-radius: 50px;
-      background: linear-gradient(135deg, #7b3fe4, #4a7de8);
-      color: white;
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem; font-style: italic;
-      cursor: pointer;
-      transition: all 0.3s;
-      letter-spacing: 0.03em;
+      margin-top: 1.25rem; width: 100%; max-width: 340px; padding: 0.85rem;
+      border: none; border-radius: 50px; background: linear-gradient(135deg, #7b3fe4, #4a7de8);
+      color: white; font-family: 'Playfair Display', serif; font-size: 1rem; font-style: italic;
+      cursor: pointer; transition: all 0.3s;
     }
-
     .lock-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(120,60,220,0.35); }
 
-    /* ── MAIN APP ── */
-    #app {
-      position: relative; z-index: 1;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem 5rem;
-      display: none;
-    }
-
+    #app { position: relative; z-index: 1; max-width: 680px; margin: 0 auto; padding: 3rem 1.5rem 5rem; display: none; }
     #app.visible { display: block; }
 
-    .header { text-align: center; margin-bottom: 3rem; }
-
-    .logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 3.2rem; font-weight: 400;
-      background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: -0.02em; line-height: 1;
-      margin-bottom: 0.5rem;
+    .guest-header { text-align: center; margin-bottom: 3rem; }
+    .guest-logo {
+      font-family: 'Playfair Display', serif; font-size: 3.2rem; font-weight: 400;
+      background: linear-gradient(135deg, #c9a8ff, #7eb8ff, #ffafd0);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      letter-spacing: -0.02em; line-height: 1; margin-bottom: 0.5rem;
     }
+    .guest-tagline { font-size: 0.85rem; color: rgba(200,180,240,0.45); letter-spacing: 0.12em; text-transform: uppercase; }
 
-    .tagline { font-size: 0.85rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+    .gf-header { text-align: center; margin-bottom: 3rem; }
+    .gf-hearts { font-size: 1.1rem; letter-spacing: 0.4em; color: rgba(255,100,140,0.55); margin-bottom: 0.75rem; }
+    .gf-logo { font-family: 'Cormorant Garamond', serif; font-size: 3.4rem; font-weight: 300; font-style: italic; color: #ffb3cc; line-height: 1; margin-bottom: 0.6rem; }
+    .gf-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: rgba(255,180,200,0.5); }
 
-    .mode-toggle {
-      display: flex;
-      background: rgba(255,255,255,0.03);
-      border: 0.5px solid var(--border);
-      border-radius: 50px;
-      padding: 4px;
-      margin-bottom: 2rem;
-      gap: 4px;
-    }
+    .mode-toggle { display: flex; border-radius: 50px; padding: 4px; margin-bottom: 2rem; gap: 4px; background: rgba(255,255,255,0.03); }
+    .theme-guest .mode-toggle { border: 0.5px solid rgba(200,160,255,0.18); }
+    .theme-gf .mode-toggle { border: 0.5px solid rgba(255,100,140,0.2); }
 
-    .mode-btn {
-      flex: 1; padding: 0.65rem 0.75rem;
-      border: none; border-radius: 50px;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.82rem; font-weight: 400;
-      transition: all 0.3s;
-      letter-spacing: 0.02em;
-    }
-
-    .mode-btn.active {
-      background: linear-gradient(135deg, rgba(150,80,255,0.28), rgba(80,140,255,0.28));
-      color: #e8d8ff;
-      border: 0.5px solid rgba(200,160,255,0.3);
-    }
+    .mode-btn { flex: 1; padding: 0.65rem 0.75rem; border: none; border-radius: 50px; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; transition: all 0.3s; }
+    .theme-guest .mode-btn { color: rgba(200,180,240,0.45); }
+    .theme-guest .mode-btn.active { background: linear-gradient(135deg, rgba(150,80,255,0.28), rgba(80,140,255,0.28)); color: #e8d8ff; border: 0.5px solid rgba(200,160,255,0.3); }
+    .theme-gf .mode-btn { color: rgba(255,160,190,0.45); }
+    .theme-gf .mode-btn.active { background: linear-gradient(135deg, rgba(220,40,90,0.25), rgba(180,20,70,0.2)); color: #ffcce0; border: 0.5px solid rgba(255,100,140,0.3); }
 
     .panel { display: none; animation: fadeUp 0.4s ease; }
     .panel.active { display: block; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    .field-label { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    .theme-guest .field-label { color: rgba(200,180,240,0.45); }
+    .theme-gf .field-label { color: rgba(255,160,190,0.5); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.95rem; text-transform: none; letter-spacing: 0.06em; }
 
-    .field-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
+    textarea { width: 100%; border-radius: 18px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 300; padding: 1.2rem 1.4rem; resize: none; outline: none; line-height: 1.75; transition: border-color 0.3s; margin-bottom: 1.5rem; }
+    .theme-guest textarea { background: rgba(255,255,255,0.03); border: 0.5px solid rgba(200,160,255,0.18); color: #f0eaf8; }
+    .theme-guest textarea::placeholder { color: rgba(200,180,240,0.2); }
+    .theme-guest textarea:focus { border-color: rgba(200,160,255,0.45); }
+    .theme-gf textarea { background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,100,140,0.2); color: #ffe8f0; }
+    .theme-gf textarea::placeholder { color: rgba(255,160,190,0.25); }
+    .theme-gf textarea:focus { border-color: rgba(255,100,140,0.45); }
 
-    textarea {
-      width: 100%;
-      background: var(--surface);
-      border: 0.5px solid var(--border);
-      border-radius: 18px;
-      color: var(--text);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem; font-weight: 300;
-      padding: 1.2rem 1.4rem;
-      resize: none; outline: none;
-      line-height: 1.75;
-      transition: border-color 0.3s;
-      margin-bottom: 1.5rem;
-    }
-
-    textarea::placeholder { color: rgba(200,180,240,0.2); }
-    textarea:focus { border-color: rgba(200,160,255,0.45); }
-
-    .upload-zone {
-      border: 1.5px dashed rgba(200,160,255,0.22);
-      border-radius: 20px;
-      padding: 3rem 2rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      position: relative;
-      background: var(--surface);
-      margin-bottom: 1.5rem;
-    }
-
-    .upload-zone:hover, .upload-zone.drag-over { border-color: rgba(200,160,255,0.5); background: rgba(150,80,255,0.05); }
-
+    .upload-zone { border-radius: 20px; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; margin-bottom: 1.5rem; }
+    .theme-guest .upload-zone { border: 1.5px dashed rgba(200,160,255,0.22); background: rgba(255,255,255,0.02); }
+    .theme-guest .upload-zone:hover { border-color: rgba(200,160,255,0.5); background: rgba(150,80,255,0.05); }
+    .theme-gf .upload-zone { border: 1.5px dashed rgba(255,100,140,0.25); background: rgba(255,255,255,0.02); }
+    .theme-gf .upload-zone:hover { border-color: rgba(255,100,140,0.55); background: rgba(220,40,90,0.05); }
     .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-
     .upload-icon { width: 44px; height: 44px; margin: 0 auto 1rem; opacity: 0.35; }
-    .upload-text { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
-    .upload-text strong { color: rgba(200,160,255,0.75); font-weight: 400; }
+    .upload-text { font-size: 0.88rem; line-height: 1.6; }
+    .theme-guest .upload-text { color: rgba(200,180,240,0.45); }
+    .theme-guest .upload-text strong { color: rgba(200,160,255,0.75); font-weight: 400; }
+    .theme-gf .upload-text { color: rgba(255,160,190,0.5); }
+    .theme-gf .upload-text strong { color: rgba(255,120,160,0.8); font-weight: 400; }
 
-    .preview-img {
-      width: 100%; max-height: 300px;
-      object-fit: cover;
-      border-radius: 18px;
-      margin-bottom: 1.5rem;
-      display: none;
-      border: 0.5px solid var(--border);
-    }
+    .preview-img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 18px; margin-bottom: 1.5rem; display: none; }
+    .theme-guest .preview-img { border: 0.5px solid rgba(200,160,255,0.18); }
+    .theme-gf .preview-img { border: 0.5px solid rgba(255,100,140,0.25); }
 
-    .conjure-btn {
-      width: 100%; padding: 1rem;
-      border: none; border-radius: 50px;
-      background: linear-gradient(135deg, #7b3fe4, #4a7de8);
-      color: white;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.05rem; font-style: italic;
-      cursor: pointer;
-      transition: all 0.3s;
-      letter-spacing: 0.03em;
-    }
-
-    .conjure-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(120,60,220,0.35); }
-    .conjure-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; box-shadow: none; }
+    .conjure-btn { width: 100%; padding: 1rem; border: none; border-radius: 50px; color: white; cursor: pointer; transition: all 0.3s; letter-spacing: 0.03em; }
+    .theme-guest .conjure-btn { background: linear-gradient(135deg, #7b3fe4, #4a7de8); font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem; }
+    .theme-guest .conjure-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(120,60,220,0.35); }
+    .theme-gf .conjure-btn { background: linear-gradient(135deg, #c41a5a, #e8426e); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; font-weight: 300; }
+    .theme-gf .conjure-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,30,80,0.4); }
+    .conjure-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
     .response-card { margin-top: 2rem; display: none; animation: fadeUp 0.6s ease; }
     .response-card.visible { display: block; }
+    .response-inner { border-radius: 22px; padding: 2.2rem 2rem 1.75rem; position: relative; }
+    .theme-guest .response-inner { background: linear-gradient(145deg, rgba(100,50,200,0.1), rgba(50,80,200,0.07)); border: 0.5px solid rgba(200,160,255,0.18); }
+    .theme-gf .response-inner { background: linear-gradient(145deg, rgba(180,20,70,0.1), rgba(220,40,90,0.07)); border: 0.5px solid rgba(255,100,140,0.2); }
+    .response-inner::before { content: '\201C'; position: absolute; top: 0.4rem; left: 1.25rem; font-family: 'Playfair Display', serif; font-size: 5rem; line-height: 1; pointer-events: none; }
+    .theme-guest .response-inner::before { color: rgba(200,160,255,0.1); }
+    .theme-gf .response-inner::before { color: rgba(255,100,140,0.12); }
 
-    .response-inner {
-      background: linear-gradient(145deg, rgba(100,50,200,0.1), rgba(50,80,200,0.07));
-      border: 0.5px solid var(--border);
-      border-radius: 22px;
-      padding: 2.2rem 2rem 1.75rem;
-      position: relative;
-    }
-
-    .response-inner::before {
-      content: '\201C';
-      position: absolute;
-      top: 0.4rem; left: 1.25rem;
-      font-family: 'Playfair Display', serif;
-      font-size: 5rem;
-      color: rgba(200,160,255,0.1);
-      line-height: 1;
-      pointer-events: none;
-    }
-
-    .response-text {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.08rem; line-height: 1.95;
-      color: #ede0ff; font-weight: 400;
-      white-space: pre-wrap; min-height: 60px;
-    }
+    .response-text { line-height: 1.95; font-weight: 400; white-space: pre-wrap; min-height: 60px; }
+    .theme-guest .response-text { font-family: 'Playfair Display', serif; font-size: 1.08rem; color: #ede0ff; }
+    .theme-gf .response-text { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic; color: #ffd6e7; line-height: 2.1; }
 
     .loading-dots { display: inline-flex; gap: 5px; align-items: center; }
-    .loading-dots span {
-      width: 6px; height: 6px;
-      background: rgba(200,160,255,0.55);
-      border-radius: 50%;
-      animation: bounce 1.2s infinite;
-    }
+    .loading-dots span { width: 6px; height: 6px; border-radius: 50%; animation: bounce 1.2s infinite; }
+    .theme-guest .loading-dots span { background: rgba(200,160,255,0.55); }
+    .theme-gf .loading-dots span { background: rgba(255,120,160,0.6); }
     .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
 
-    @keyframes bounce {
-      0%,60%,100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-6px); opacity: 1; }
-    }
+    .again-btn { display: block; margin: 1.25rem auto 0; padding: 0.5rem 1.75rem; background: transparent; border-radius: 50px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; letter-spacing: 0.09em; text-transform: uppercase; transition: all 0.3s; }
+    .theme-guest .again-btn { border: 0.5px solid rgba(200,160,255,0.22); color: rgba(200,160,255,0.5); }
+    .theme-guest .again-btn:hover { border-color: rgba(200,160,255,0.5); color: rgba(200,160,255,0.9); }
+    .theme-gf .again-btn { border: 0.5px solid rgba(255,100,140,0.25); color: rgba(255,120,160,0.5); }
+    .theme-gf .again-btn:hover { border-color: rgba(255,100,140,0.55); color: rgba(255,140,170,0.9); }
 
-    .again-btn {
-      display: block; margin: 1.25rem auto 0;
-      padding: 0.5rem 1.75rem;
-      background: transparent;
-      border: 0.5px solid rgba(200,160,255,0.22);
-      border-radius: 50px;
-      color: rgba(200,160,255,0.5);
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.78rem; letter-spacing: 0.09em; text-transform: uppercase;
-      transition: all 0.3s;
-    }
-
-    .again-btn:hover { border-color: rgba(200,160,255,0.5); color: rgba(200,160,255,0.9); }
-
-    .error-msg { color: rgba(255,150,150,0.75); font-size: 0.83rem; text-align: center; margin-top: 0.75rem; display: none; }
+    .error-msg { font-size: 0.83rem; color: rgba(255,150,150,0.75); text-align: center; margin-top: 0.75rem; display: none; }
 
     @media (max-width: 480px) {
-      .logo { font-size: 2.4rem; }
-      .mode-btn { font-size: 0.75rem; padding: 0.6rem 0.5rem; }
+      .guest-logo { font-size: 2.4rem; }
+      .gf-logo { font-size: 2.6rem; }
+      .mode-btn { font-size: 0.73rem; padding: 0.6rem 0.4rem; }
     }
   </style>
 </head>
 <body>
 
-<!-- LOCK SCREEN -->
 <div id="lock-screen">
   <svg class="lock-icon" viewBox="0 0 56 56" fill="none">
     <rect x="10" y="24" width="36" height="26" rx="6" stroke="rgba(200,160,255,0.7)" stroke-width="1.5"/>
@@ -348,11 +186,16 @@
   <button class="lock-btn" onclick="tryUnlock()">enter</button>
 </div>
 
-<!-- MAIN APP -->
 <div id="app">
-  <div class="header">
-    <div class="logo">YashGPT</div>
-    <div class="tagline">you are more beautiful than you know</div>
+  <div class="guest-header" id="guest-header">
+    <div class="guest-logo">YashGPT</div>
+    <div class="guest-tagline">you are more beautiful than you know</div>
+  </div>
+
+  <div class="gf-header" id="gf-header" style="display:none">
+    <div class="gf-hearts">🌹 ♡ 🌹</div>
+    <div class="gf-logo">for you, always</div>
+    <div class="gf-tagline">you are the most beautiful thing i've ever seen</div>
   </div>
 
   <div class="mode-toggle">
@@ -361,9 +204,9 @@
   </div>
 
   <div id="panel-text" class="panel active">
-    <div class="field-label">what's been weighing on you?</div>
-    <textarea id="insecurity-input" rows="5" placeholder="I hate how I look in photos... I feel like I'm not smart enough... I'm scared no one really loves me..."></textarea>
-    <button class="conjure-btn" onclick="generateText()">conjure something beautiful for me</button>
+    <div class="field-label" id="text-label">what's been weighing on you?</div>
+    <textarea id="insecurity-input" rows="5" placeholder="i don't like how i look today... i feel like i'm not enough..."></textarea>
+    <button class="conjure-btn" id="text-btn" onclick="generateText()">conjure something beautiful for me</button>
   </div>
 
   <div id="panel-image" class="panel">
@@ -371,8 +214,8 @@
     <div class="upload-zone" id="upload-zone">
       <input type="file" accept="image/*" id="file-input" onchange="handleFile(this)" />
       <svg class="upload-icon" viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="24" r="22" stroke="rgba(200,160,255,0.35)" stroke-width="1.2"/>
-        <path d="M24 32V16M24 16l-7 7M24 16l7 7" stroke="rgba(200,160,255,0.65)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="24" cy="24" r="22" stroke="rgba(200,160,255,0.35)" stroke-width="1.2" id="upload-circle"/>
+        <path d="M24 32V16M24 16l-7 7M24 16l7 7" stroke="rgba(200,160,255,0.65)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" id="upload-path"/>
       </svg>
       <div class="upload-text"><strong>drop a photo here</strong><br>or tap to choose one</div>
     </div>
@@ -390,16 +233,51 @@
 </div>
 
 <script>
-  const PASSWORD = 'zipperboyloveskiara';
+  const GUEST_PW = 'guest';
+  const GF_PW = 'zipperboyloveskiara';
+  let currentTheme = 'guest';
+  let currentMode = 'text';
+  let currentImageB64 = null;
+  let currentImageType = null;
+
+  const GUEST_PROMPT = `You are YashGPT — you talk to people like a close friend who genuinely sees them and thinks they're wonderful. Not an AI, not a therapist. Just someone real who cares.
+
+Your vibe:
+- Warm, casual, direct. Like texting a good friend.
+- Specific — respond to exactly what they said, not a generic version of it
+- Short sentences. 3-5 lines max. Sometimes just fragments.
+- Never say "you are valid", "self-love", "embrace", "journey", or any therapy-speak
+- Never start with "oh" or "aw" or "I can see that"
+- Make them feel seen, not lectured
+- End with something that actually sticks with them`;
+
+  const GF_PROMPT = `You are YashGPT — you talk exactly like a boy who is completely, deeply in love with his girlfriend. Casual, specific, tender. Like real texts from someone who thinks about her all the time and notices everything about her.
+
+Your style:
+- Short lines. Sometimes just one sentence. Sometimes just a fragment.
+- Specific and surprising — mention small details like how light hits her eyes, her laugh, her voice, the way she is
+- Casual but it hits deep — "not finer than you tho", "how could you be scared of such a pretty face"
+- Compare her to beautiful things — sunsets, stars, light — but always say she is MORE beautiful than them
+- "the sun looks like how your eyes look when they meet light"
+- "i guess im a genius when it comes to how beautiful you are"  
+- "but the beauty of a mere sunset cannot captivate the beauty of you"
+- Never generic. Never fancy poetry. Real, tender, and specific.
+- 3-6 short lines. No long paragraphs.
+- Write like you're texting her at 2am and you mean every single word`;
 
   function tryUnlock() {
     const input = document.getElementById('pw-input');
     const hint = document.getElementById('lock-hint');
-    if (input.value === PASSWORD) {
+    const val = input.value.trim();
+
+    if (val === GUEST_PW || val === GF_PW) {
+      currentTheme = val === GF_PW ? 'gf' : 'guest';
       document.getElementById('lock-screen').classList.add('unlocking');
       setTimeout(() => {
         document.getElementById('lock-screen').style.display = 'none';
+        document.body.classList.add('theme-' + currentTheme);
         document.getElementById('app').classList.add('visible');
+        if (currentTheme === 'gf') setupGFMode();
       }, 600);
     } else {
       input.classList.add('wrong');
@@ -409,9 +287,28 @@
     }
   }
 
-  let currentMode = 'text';
-  let currentImageB64 = null;
-  let currentImageType = null;
+  function setupGFMode() {
+    document.getElementById('guest-header').style.display = 'none';
+    document.getElementById('gf-header').style.display = 'block';
+    document.getElementById('text-label').textContent = "what's on your heart?";
+    document.getElementById('text-btn').textContent = 'tell me something beautiful';
+    document.getElementById('img-btn').textContent = 'tell me something beautiful';
+    document.getElementById('insecurity-input').placeholder = "i don't feel pretty today... i have so many insecurities...";
+    document.getElementById('upload-circle').setAttribute('stroke', 'rgba(255,100,140,0.35)');
+    document.getElementById('upload-path').setAttribute('stroke', 'rgba(255,100,140,0.65)');
+
+    const petals = ['🌹', '🌸', '❤️', '🌹', '🌸', '💗'];
+    for (let i = 0; i < 14; i++) {
+      const p = document.createElement('div');
+      p.className = 'petal';
+      p.textContent = petals[Math.floor(Math.random() * petals.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.fontSize = (0.7 + Math.random() * 0.9) + 'rem';
+      p.style.animationDuration = (10 + Math.random() * 14) + 's';
+      p.style.animationDelay = (Math.random() * 12) + 's';
+      document.body.appendChild(p);
+    }
+  }
 
   function switchMode(mode) {
     currentMode = mode;
@@ -482,18 +379,17 @@
     return data.content;
   }
 
-  const SYSTEM = `You are YashGPT — a poetic, deeply empathetic AI whose entire purpose is to make people feel genuinely beautiful, seen, and loved. When someone shares an insecurity or a photo of themselves, respond with something that reads like a page from a very beautiful, literary book. Your tone is warm, intimate, and poetic — like a letter from someone who truly sees them. Rules: Write 3–5 sentences, lyrical and flowing. Never be generic or cliché — be specific and surprising. Focus on the light, not the absence of darkness. Don't say things like "you should love yourself" — show them why they already deserve to be loved. End with something that lingers — a line they'll remember. Write in second person (you/your).`;
-
   async function generateText() {
     const input = document.getElementById('insecurity-input').value.trim();
     if (!input) return;
     showLoading();
-    const btn = document.querySelector('#panel-text .conjure-btn');
+    const btn = document.getElementById('text-btn');
     btn.disabled = true;
     try {
+      const prompt = currentTheme === 'gf' ? GF_PROMPT : GUEST_PROMPT;
       const reply = await callAPI([
-        { text: SYSTEM },
-        { text: `Someone shared this with me: "${input}"\n\nPlease write them something beautiful.` }
+        { text: prompt },
+        { text: 'Someone shared this: "' + input + '"\n\nRespond to them.' }
       ]);
       document.getElementById('response-text').textContent = reply;
     } catch {
@@ -508,10 +404,11 @@
     const btn = document.getElementById('img-btn');
     btn.disabled = true;
     try {
+      const prompt = currentTheme === 'gf' ? GF_PROMPT : GUEST_PROMPT;
       const reply = await callAPI([
-        { text: SYSTEM },
+        { text: prompt },
         { inlineData: { mimeType: currentImageType, data: currentImageB64 } },
-        { text: 'Someone shared a photo of themselves. Please write them something genuinely beautiful — notice something real and specific about them, and turn it into poetry.' }
+        { text: 'Someone shared a photo of themselves. Look at them and say something real and beautiful about what you see.' }
       ]);
       document.getElementById('response-text').textContent = reply;
     } catch {
