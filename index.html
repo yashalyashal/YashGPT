@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>YashGPT</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=DM+Sans:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=DM+Sans:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Bebas+Neue&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { min-height: 100vh; font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; }
@@ -21,11 +21,24 @@
       background: radial-gradient(ellipse at 20% 20%, rgba(220,40,90,0.18) 0%, transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(160,20,60,0.14) 0%, transparent 55%);
     }
 
+    body.theme-shail { background: #0a0a0a; color: #e8e0d0; }
+    body.theme-shail::before {
+      content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background: radial-gradient(ellipse at 30% 20%, rgba(80,70,50,0.25) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(50,45,35,0.2) 0%, transparent 50%);
+    }
+
     .petal { position: fixed; pointer-events: none; z-index: 0; animation: fall linear infinite; opacity: 0; }
     @keyframes fall {
       0% { transform: translateY(-40px) rotate(0deg); opacity: 0; }
       5% { opacity: 0.5; } 95% { opacity: 0.2; }
       100% { transform: translateY(105vh) rotate(400deg); opacity: 0; }
+    }
+
+    .rain-drop { position: fixed; pointer-events: none; z-index: 0; width: 1px; background: linear-gradient(transparent, rgba(180,160,120,0.12)); animation: rain linear infinite; opacity: 0; }
+    @keyframes rain {
+      0% { transform: translateY(-20px); opacity: 0; }
+      10% { opacity: 0.8; } 90% { opacity: 0.4; }
+      100% { transform: translateY(105vh); opacity: 0; }
     }
 
     #lock-screen {
@@ -76,17 +89,7 @@
       letter-spacing: -0.02em; line-height: 1; margin-bottom: 0.5rem;
     }
     .guest-tagline { font-size: 0.85rem; color: rgba(200,180,240,0.45); letter-spacing: 0.12em; text-transform: uppercase; }
-
-    .prompts-left {
-      display: inline-block;
-      margin-top: 1rem;
-      font-size: 0.78rem;
-      color: rgba(200,160,255,0.4);
-      letter-spacing: 0.08em;
-      border: 0.5px solid rgba(200,160,255,0.15);
-      border-radius: 50px;
-      padding: 0.3rem 1rem;
-    }
+    .prompts-left { display: inline-block; margin-top: 1rem; font-size: 0.78rem; color: rgba(200,160,255,0.4); letter-spacing: 0.08em; border: 0.5px solid rgba(200,160,255,0.15); border-radius: 50px; padding: 0.3rem 1rem; }
     .prompts-left span { color: rgba(200,160,255,0.8); font-weight: 400; }
 
     .gf-header { text-align: center; margin-bottom: 3rem; }
@@ -94,15 +97,23 @@
     .gf-logo { font-family: 'Cormorant Garamond', serif; font-size: 3.4rem; font-weight: 300; font-style: italic; color: #ffb3cc; line-height: 1; margin-bottom: 0.6rem; }
     .gf-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; color: rgba(255,180,200,0.5); }
 
+    .shail-header { text-align: center; margin-bottom: 3rem; }
+    .shail-logo { font-family: 'Bebas Neue', sans-serif; font-size: 4rem; letter-spacing: 0.15em; color: #c8b89a; line-height: 1; margin-bottom: 0.4rem; }
+    .shail-rule { width: 60px; height: 1px; background: rgba(180,160,100,0.2); margin: 0.6rem auto; }
+    .shail-tagline { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1rem; color: rgba(180,160,100,0.4); }
+
     .mode-toggle { display: flex; border-radius: 50px; padding: 4px; margin-bottom: 2rem; gap: 4px; background: rgba(255,255,255,0.03); }
     .theme-guest .mode-toggle { border: 0.5px solid rgba(200,160,255,0.18); }
     .theme-gf .mode-toggle { border: 0.5px solid rgba(255,100,140,0.2); }
+    .theme-shail .mode-toggle { border: 0.5px solid rgba(180,160,100,0.18); border-radius: 8px; }
 
     .mode-btn { flex: 1; padding: 0.65rem 0.75rem; border: none; border-radius: 50px; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; transition: all 0.3s; }
     .theme-guest .mode-btn { color: rgba(200,180,240,0.45); }
     .theme-guest .mode-btn.active { background: linear-gradient(135deg, rgba(150,80,255,0.28), rgba(80,140,255,0.28)); color: #e8d8ff; border: 0.5px solid rgba(200,160,255,0.3); }
     .theme-gf .mode-btn { color: rgba(255,160,190,0.45); }
     .theme-gf .mode-btn.active { background: linear-gradient(135deg, rgba(220,40,90,0.25), rgba(180,20,70,0.2)); color: #ffcce0; border: 0.5px solid rgba(255,100,140,0.3); }
+    .theme-shail .mode-btn { color: rgba(180,160,100,0.4); border-radius: 6px; }
+    .theme-shail .mode-btn.active { background: rgba(180,160,100,0.1); color: #c8b89a; border: 0.5px solid rgba(180,160,100,0.25); }
 
     .panel { display: none; animation: fadeUp 0.4s ease; }
     .panel.active { display: block; }
@@ -111,20 +122,26 @@
     .field-label { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
     .theme-guest .field-label { color: rgba(200,180,240,0.45); }
     .theme-gf .field-label { color: rgba(255,160,190,0.5); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.95rem; text-transform: none; letter-spacing: 0.06em; }
+    .theme-shail .field-label { color: rgba(180,160,100,0.4); letter-spacing: 0.15em; font-size: 0.72rem; }
 
-    textarea { width: 100%; border-radius: 18px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 300; padding: 1.2rem 1.4rem; resize: none; outline: none; line-height: 1.75; transition: border-color 0.3s; margin-bottom: 1.5rem; }
-    .theme-guest textarea { background: rgba(255,255,255,0.03); border: 0.5px solid rgba(200,160,255,0.18); color: #f0eaf8; }
+    textarea { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 300; padding: 1.2rem 1.4rem; resize: none; outline: none; line-height: 1.75; transition: border-color 0.3s; margin-bottom: 1.5rem; }
+    .theme-guest textarea { background: rgba(255,255,255,0.03); border: 0.5px solid rgba(200,160,255,0.18); color: #f0eaf8; border-radius: 18px; }
     .theme-guest textarea::placeholder { color: rgba(200,180,240,0.2); }
     .theme-guest textarea:focus { border-color: rgba(200,160,255,0.45); }
-    .theme-gf textarea { background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,100,140,0.2); color: #ffe8f0; }
+    .theme-gf textarea { background: rgba(255,255,255,0.03); border: 0.5px solid rgba(255,100,140,0.2); color: #ffe8f0; border-radius: 18px; }
     .theme-gf textarea::placeholder { color: rgba(255,160,190,0.25); }
     .theme-gf textarea:focus { border-color: rgba(255,100,140,0.45); }
+    .theme-shail textarea { background: rgba(255,255,255,0.02); border: 0.5px solid rgba(180,160,100,0.18); color: #e8e0d0; border-radius: 6px; }
+    .theme-shail textarea::placeholder { color: rgba(180,160,100,0.2); }
+    .theme-shail textarea:focus { border-color: rgba(180,160,100,0.38); }
 
-    .upload-zone { border-radius: 20px; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; margin-bottom: 1.5rem; }
-    .theme-guest .upload-zone { border: 1.5px dashed rgba(200,160,255,0.22); background: rgba(255,255,255,0.02); }
+    .upload-zone { padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; margin-bottom: 1.5rem; }
+    .theme-guest .upload-zone { border: 1.5px dashed rgba(200,160,255,0.22); background: rgba(255,255,255,0.02); border-radius: 20px; }
     .theme-guest .upload-zone:hover { border-color: rgba(200,160,255,0.5); background: rgba(150,80,255,0.05); }
-    .theme-gf .upload-zone { border: 1.5px dashed rgba(255,100,140,0.25); background: rgba(255,255,255,0.02); }
+    .theme-gf .upload-zone { border: 1.5px dashed rgba(255,100,140,0.25); background: rgba(255,255,255,0.02); border-radius: 20px; }
     .theme-gf .upload-zone:hover { border-color: rgba(255,100,140,0.55); background: rgba(220,40,90,0.05); }
+    .theme-shail .upload-zone { border: 1px dashed rgba(180,160,100,0.2); background: rgba(255,255,255,0.01); border-radius: 6px; }
+    .theme-shail .upload-zone:hover { border-color: rgba(180,160,100,0.4); background: rgba(180,160,100,0.03); }
     .upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
     .upload-icon { width: 44px; height: 44px; margin: 0 auto 1rem; opacity: 0.35; }
     .upload-text { font-size: 0.88rem; line-height: 1.6; }
@@ -132,50 +149,62 @@
     .theme-guest .upload-text strong { color: rgba(200,160,255,0.75); font-weight: 400; }
     .theme-gf .upload-text { color: rgba(255,160,190,0.5); }
     .theme-gf .upload-text strong { color: rgba(255,120,160,0.8); font-weight: 400; }
+    .theme-shail .upload-text { color: rgba(180,160,100,0.4); }
+    .theme-shail .upload-text strong { color: rgba(180,160,100,0.7); font-weight: 400; }
 
-    .preview-img { width: 100%; max-height: 300px; object-fit: cover; border-radius: 18px; margin-bottom: 1.5rem; display: none; }
-    .theme-guest .preview-img { border: 0.5px solid rgba(200,160,255,0.18); }
-    .theme-gf .preview-img { border: 0.5px solid rgba(255,100,140,0.25); }
+    .preview-img { width: 100%; max-height: 300px; object-fit: cover; margin-bottom: 1.5rem; display: none; }
+    .theme-guest .preview-img { border: 0.5px solid rgba(200,160,255,0.18); border-radius: 18px; }
+    .theme-gf .preview-img { border: 0.5px solid rgba(255,100,140,0.25); border-radius: 18px; }
+    .theme-shail .preview-img { border: 0.5px solid rgba(180,160,100,0.2); border-radius: 6px; }
 
-    .conjure-btn { width: 100%; padding: 1rem; border: none; border-radius: 50px; color: white; cursor: pointer; transition: all 0.3s; letter-spacing: 0.03em; }
-    .theme-guest .conjure-btn { background: linear-gradient(135deg, #7b3fe4, #4a7de8); font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem; }
+    .conjure-btn { width: 100%; padding: 1rem; border: none; cursor: pointer; transition: all 0.3s; letter-spacing: 0.03em; }
+    .theme-guest .conjure-btn { background: linear-gradient(135deg, #7b3fe4, #4a7de8); font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem; border-radius: 50px; color: white; }
     .theme-guest .conjure-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(120,60,220,0.35); }
-    .theme-gf .conjure-btn { background: linear-gradient(135deg, #c41a5a, #e8426e); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; font-weight: 300; }
+    .theme-gf .conjure-btn { background: linear-gradient(135deg, #c41a5a, #e8426e); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; font-weight: 300; border-radius: 50px; color: white; }
     .theme-gf .conjure-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,30,80,0.4); }
+    .theme-shail .conjure-btn { background: rgba(180,160,100,0.1); border: 0.5px solid rgba(180,160,100,0.3); font-family: 'DM Sans', sans-serif; font-size: 0.88rem; letter-spacing: 0.12em; text-transform: uppercase; border-radius: 6px; color: #c8b89a; }
+    .theme-shail .conjure-btn:hover { background: rgba(180,160,100,0.18); border-color: rgba(180,160,100,0.5); }
     .conjure-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
 
     .response-card { margin-top: 2rem; display: none; animation: fadeUp 0.6s ease; }
     .response-card.visible { display: block; }
-    .response-inner { border-radius: 22px; padding: 2.2rem 2rem 1.75rem; position: relative; }
-    .theme-guest .response-inner { background: linear-gradient(145deg, rgba(100,50,200,0.1), rgba(50,80,200,0.07)); border: 0.5px solid rgba(200,160,255,0.18); }
-    .theme-gf .response-inner { background: linear-gradient(145deg, rgba(180,20,70,0.1), rgba(220,40,90,0.07)); border: 0.5px solid rgba(255,100,140,0.2); }
+    .response-inner { padding: 2.2rem 2rem 1.75rem; position: relative; }
+    .theme-guest .response-inner { background: linear-gradient(145deg, rgba(100,50,200,0.1), rgba(50,80,200,0.07)); border: 0.5px solid rgba(200,160,255,0.18); border-radius: 22px; }
+    .theme-gf .response-inner { background: linear-gradient(145deg, rgba(180,20,70,0.1), rgba(220,40,90,0.07)); border: 0.5px solid rgba(255,100,140,0.2); border-radius: 22px; }
+    .theme-shail .response-inner { background: rgba(180,160,100,0.04); border: 0.5px solid rgba(180,160,100,0.15); border-left: 2px solid rgba(180,160,100,0.3); border-radius: 6px; }
     .response-inner::before { content: '\201C'; position: absolute; top: 0.4rem; left: 1.25rem; font-family: 'Playfair Display', serif; font-size: 5rem; line-height: 1; pointer-events: none; }
     .theme-guest .response-inner::before { color: rgba(200,160,255,0.1); }
     .theme-gf .response-inner::before { color: rgba(255,100,140,0.12); }
+    .theme-shail .response-inner::before { color: rgba(180,160,100,0.08); }
 
     .response-text { line-height: 1.95; font-weight: 400; white-space: pre-wrap; min-height: 60px; }
     .theme-guest .response-text { font-family: 'Playfair Display', serif; font-size: 1.08rem; color: #ede0ff; }
     .theme-gf .response-text { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-style: italic; color: #ffd6e7; line-height: 2.1; }
+    .theme-shail .response-text { font-family: 'DM Sans', sans-serif; font-size: 0.95rem; color: #d8cdb8; line-height: 1.9; font-weight: 300; }
 
     .loading-dots { display: inline-flex; gap: 5px; align-items: center; }
     .loading-dots span { width: 6px; height: 6px; border-radius: 50%; animation: bounce 1.2s infinite; }
     .theme-guest .loading-dots span { background: rgba(200,160,255,0.55); }
     .theme-gf .loading-dots span { background: rgba(255,120,160,0.6); }
+    .theme-shail .loading-dots span { background: rgba(180,160,100,0.5); }
     .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
     .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes bounce { 0%,60%,100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-6px); opacity: 1; } }
 
-    .again-btn { display: block; margin: 1.25rem auto 0; padding: 0.5rem 1.75rem; background: transparent; border-radius: 50px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; letter-spacing: 0.09em; text-transform: uppercase; transition: all 0.3s; }
-    .theme-guest .again-btn { border: 0.5px solid rgba(200,160,255,0.22); color: rgba(200,160,255,0.5); }
+    .again-btn { display: block; margin: 1.25rem auto 0; padding: 0.5rem 1.75rem; background: transparent; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; letter-spacing: 0.09em; text-transform: uppercase; transition: all 0.3s; }
+    .theme-guest .again-btn { border: 0.5px solid rgba(200,160,255,0.22); color: rgba(200,160,255,0.5); border-radius: 50px; }
     .theme-guest .again-btn:hover { border-color: rgba(200,160,255,0.5); color: rgba(200,160,255,0.9); }
-    .theme-gf .again-btn { border: 0.5px solid rgba(255,100,140,0.25); color: rgba(255,120,160,0.5); }
+    .theme-gf .again-btn { border: 0.5px solid rgba(255,100,140,0.25); color: rgba(255,120,160,0.5); border-radius: 50px; }
     .theme-gf .again-btn:hover { border-color: rgba(255,100,140,0.55); color: rgba(255,140,170,0.9); }
+    .theme-shail .again-btn { border: 0.5px solid rgba(180,160,100,0.2); color: rgba(180,160,100,0.4); border-radius: 4px; }
+    .theme-shail .again-btn:hover { border-color: rgba(180,160,100,0.4); color: rgba(180,160,100,0.8); }
 
     .error-msg { font-size: 0.83rem; color: rgba(255,150,150,0.75); text-align: center; margin-top: 0.75rem; display: none; }
 
     @media (max-width: 480px) {
       .guest-logo { font-size: 2.4rem; }
       .gf-logo { font-size: 2.6rem; }
+      .shail-logo { font-size: 3rem; }
       .mode-btn { font-size: 0.73rem; padding: 0.6rem 0.4rem; }
     }
   </style>
@@ -202,13 +231,19 @@
   <div class="guest-header" id="guest-header">
     <div class="guest-logo">YashGPT</div>
     <div class="guest-tagline">you are more beautiful than you know</div>
-    <div class="prompts-left" id="prompts-left"><span id="prompts-count">30</span> prompts left today</div>
+    <div class="prompts-left" id="prompts-left"><span id="prompts-count">50</span> prompts left today</div>
   </div>
 
   <div class="gf-header" id="gf-header" style="display:none">
     <div class="gf-hearts">🌹 ♡ 🌹</div>
     <div class="gf-logo">for you, always</div>
     <div class="gf-tagline">you are the most beautiful thing i've ever seen</div>
+  </div>
+
+  <div class="shail-header" id="shail-header" style="display:none">
+    <div class="shail-logo">YashGPT</div>
+    <div class="shail-rule"></div>
+    <div class="shail-tagline">for the ones who feel everything too deeply</div>
   </div>
 
   <div class="mode-toggle">
@@ -248,6 +283,7 @@
 <script>
   const GUEST_PW = 'guest';
   const GF_PW = 'zipperboyloveskiara';
+  const SHAIL_PW = 'itsthefeel';
   const DAILY_LIMIT = 50;
   let currentTheme = 'guest';
   let currentMode = 'text';
@@ -269,8 +305,7 @@
   }
 
   function updatePromptsDisplay() {
-    const used = getGuestUsage();
-    const left = Math.max(0, DAILY_LIMIT - used);
+    const left = Math.max(0, DAILY_LIMIT - getGuestUsage());
     const el = document.getElementById('prompts-count');
     if (el) el.textContent = left;
   }
@@ -288,9 +323,17 @@ Your vibe:
 
   const GF_PROMPT = `You are YashGPT — you talk exactly like a boy who is completely, deeply in love with his girlfriend. Casual, specific, tender. Like real texts from someone who thinks about her all the time and notices everything about her.
 
+Here is what she looks like, for reference. Only use details that are RELEVANT to what she shares — do not dump everything at once:
+- She has gorgeous, thick curly black hair that frames her face beautifully
+- Her eyes are dark brown, but when light hits them they turn hazel — like the sun caught them off guard
+- She has a warm, golden-brown skin tone that glows
+- She has a soft, pretty smile — the kind that makes you look twice
+- She wears delicate gold necklaces that suit her perfectly
+- She has a natural, effortless beauty — the kind that doesn't need to try
+
 Your style:
 - Short lines. Sometimes just one sentence. Sometimes just a fragment.
-- Specific and surprising — mention small details like how light hits her eyes, her laugh, her voice, the way she is
+- Specific and surprising — use her actual features when relevant to what she shared
 - Casual but it hits deep — "not finer than you tho", "youre my favorite thing to look at"
 - Compare her to beautiful things — sunsets, stars, light — but always say she is MORE beautiful than them
 - "the sun looks like how your eyes look when they meet light"
@@ -304,19 +347,40 @@ Your style:
 Just know,
 That Yashal will always love you."`;
 
+  const SHAIL_PROMPT = `You are YashGPT — you talk like a best friend who is deeply, unashamedly affectionate and a little gay about it. Tender, real, kind of intense but in the most loving way. Like someone who would hold your face and tell you you're beautiful without making it weird.
+
+Your vibe:
+- Warm but not soft — direct, genuine, sometimes a little dramatic in the best way
+- Short lines. Fragments. Like real texts between very close friends.
+- Specific — actually respond to what they said, don't give generic comfort
+- A little poetic but grounded — not flowery, just real
+- You can be openly affectionate — "babe", "i love you", "you're insane for thinking that"
+- Never therapy-speak. Never "you are valid". Never preachy.
+- Make them feel genuinely seen and loved by someone who truly knows them
+- 3-6 short lines max
+- Always end EVERY response with exactly these 4 lines on their own:
+"Eitherway,
+Just know,
+Yashal loves you,
+And wants to aggressively, but gracefully crack you."`;
+
   function tryUnlock() {
     const input = document.getElementById('pw-input');
     const hint = document.getElementById('lock-hint');
     const val = input.value.trim();
 
-    if (val === GUEST_PW || val === GF_PW) {
-      currentTheme = val === GF_PW ? 'gf' : 'guest';
+    if (val === GUEST_PW || val === GF_PW || val === SHAIL_PW) {
+      if (val === GF_PW) currentTheme = 'gf';
+      else if (val === SHAIL_PW) currentTheme = 'shail';
+      else currentTheme = 'guest';
+
       document.getElementById('lock-screen').classList.add('unlocking');
       setTimeout(() => {
         document.getElementById('lock-screen').style.display = 'none';
         document.body.classList.add('theme-' + currentTheme);
         document.getElementById('app').classList.add('visible');
         if (currentTheme === 'gf') setupGFMode();
+        else if (currentTheme === 'shail') setupShailMode();
         else updatePromptsDisplay();
       }, 600);
     } else {
@@ -336,7 +400,6 @@ That Yashal will always love you."`;
     document.getElementById('insecurity-input').placeholder = "i don't feel pretty today... i have so many insecurities...";
     document.getElementById('upload-circle').setAttribute('stroke', 'rgba(255,100,140,0.35)');
     document.getElementById('upload-path').setAttribute('stroke', 'rgba(255,100,140,0.65)');
-
     const petals = ['🌹', '🌸', '❤️', '🌹', '🌸', '💗'];
     for (let i = 0; i < 14; i++) {
       const p = document.createElement('div');
@@ -347,6 +410,26 @@ That Yashal will always love you."`;
       p.style.animationDuration = (10 + Math.random() * 14) + 's';
       p.style.animationDelay = (Math.random() * 12) + 's';
       document.body.appendChild(p);
+    }
+  }
+
+  function setupShailMode() {
+    document.getElementById('guest-header').style.display = 'none';
+    document.getElementById('shail-header').style.display = 'block';
+    document.getElementById('text-label').textContent = "what's going on";
+    document.getElementById('text-btn').textContent = 'say something real';
+    document.getElementById('img-btn').textContent = 'say something real';
+    document.getElementById('insecurity-input').placeholder = "i've been feeling off lately... i don't like what i see in the mirror...";
+    document.getElementById('upload-circle').setAttribute('stroke', 'rgba(180,160,100,0.35)');
+    document.getElementById('upload-path').setAttribute('stroke', 'rgba(180,160,100,0.55)');
+    for (let i = 0; i < 30; i++) {
+      const r = document.createElement('div');
+      r.className = 'rain-drop';
+      r.style.left = Math.random() * 100 + 'vw';
+      r.style.height = (40 + Math.random() * 60) + 'px';
+      r.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      r.style.animationDelay = (Math.random() * 3) + 's';
+      document.body.appendChild(r);
     }
   }
 
@@ -423,7 +506,7 @@ That Yashal will always love you."`;
     if (currentTheme === 'guest' && getGuestUsage() >= DAILY_LIMIT) {
       document.getElementById('response-card').classList.remove('visible');
       const err = document.getElementById('error-msg');
-      err.textContent = "you've used all 30 prompts for today — come back tomorrow 🌙";
+      err.textContent = "you've used all 50 prompts for today — come back tomorrow 🌙";
       err.style.display = 'block';
       return false;
     }
@@ -438,7 +521,7 @@ That Yashal will always love you."`;
     const btn = document.getElementById('text-btn');
     btn.disabled = true;
     try {
-      const prompt = currentTheme === 'gf' ? GF_PROMPT : GUEST_PROMPT;
+      const prompt = currentTheme === 'gf' ? GF_PROMPT : currentTheme === 'shail' ? SHAIL_PROMPT : GUEST_PROMPT;
       const reply = await callAPI([
         { text: prompt },
         { text: 'Someone shared this: "' + input + '"\n\nRespond to them.' }
@@ -458,7 +541,7 @@ That Yashal will always love you."`;
     const btn = document.getElementById('img-btn');
     btn.disabled = true;
     try {
-      const prompt = currentTheme === 'gf' ? GF_PROMPT : GUEST_PROMPT;
+      const prompt = currentTheme === 'gf' ? GF_PROMPT : currentTheme === 'shail' ? SHAIL_PROMPT : GUEST_PROMPT;
       const reply = await callAPI([
         { text: prompt },
         { inlineData: { mimeType: currentImageType, data: currentImageB64 } },
